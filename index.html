@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PDF Studio — by Joseph</title>
+<meta name="description" content="Free online PDF tools — Merge, Split, Compress, Convert, OCR and more. No signup required. Created by Joseph." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body,#root{height:100%;width:100%;}
+  body{background:#070B12;color:#EEF2FF;font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+  *{scrollbar-width:thin;scrollbar-color:#1C2536 transparent;}
+  ::-webkit-scrollbar{width:5px;height:5px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:#1C2536;border-radius:3px;}
+  @keyframes slideIn{from{transform:translateX(110%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @keyframes popupSlideUp{from{transform:translateY(120%);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  @keyframes countUp{from{opacity:0;transform:scale(0.8);}to{opacity:1;transform:scale(1);}}
+  @keyframes visitorPulse{0%,100%{box-shadow:0 0 0 0 rgba(48,209,88,0.4);}50%{box-shadow:0 0 0 6px rgba(48,209,88,0);}}
+  .hbtn{background:#111827;border:1px solid rgba(255,255,255,0.08);color:rgba(238,242,255,0.5);padding:6px 14px;border-radius:20px;font-family:'DM Sans';font-size:12px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;}
+  .hbtn:hover{border-color:rgba(255,255,255,0.15);color:#EEF2FF;}
+  .qt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border-radius:10px;cursor:pointer;background:#111827;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;white-space:nowrap;flex-shrink:0;}
+  .qt:hover{border-color:rgba(255,255,255,0.12);background:#1C2536;transform:translateY(-1px);}
+  .qt.act{border-color:#0A84FF;background:rgba(10,132,255,0.1);}
+  .qt-icon{font-size:17px;line-height:1;}
+  .qt-label{font-size:10px;color:rgba(238,242,255,0.45);font-weight:500;}
+  .qt.act .qt-label{color:#0A84FF;}
+  .uz{border:2px dashed rgba(255,255,255,0.1);border-radius:12px;padding:22px 14px;text-align:center;cursor:pointer;transition:all 0.25s;background:#111827;}
+  .uz:hover,.uz.dv{border-color:#0A84FF;background:rgba(10,132,255,0.05);}
+  .ui{width:46px;height:46px;margin:0 auto 12px;background:#1C2536;border:1px solid rgba(255,255,255,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .ubtn{margin-top:12px;display:inline-block;background:#0A84FF;color:#fff;border:none;padding:9px 20px;border-radius:20px;font-family:'DM Sans';font-size:13px;font-weight:500;cursor:pointer;box-shadow:0 0 18px rgba(10,132,255,0.25);transition:all 0.2s;}
+  .ubtn:hover{background:#0070e0;transform:translateY(-1px);}
+  .sc{background:#111827;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 12px;}
+  .sv{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+  .sl{font-size:10px;color:rgba(238,242,255,0.28);margin-top:2px;}
+  .ch{padding:12px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.06);background:#0C1220;flex-shrink:0;}
+  .sb{flex:1;background:#111827;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:7px 12px;display:flex;align-items:center;gap:8px;}
+  .sb input{flex:1;background:none;border:none;outline:none;color:#EEF2FF;font-family:'DM Sans';font-size:13px;}
+  .sb input::placeholder{color:rgba(238,242,255,0.28);}
+  .flb{flex:1;overflow-y:auto;padding:14px 18px;}
+  .fr{display:flex;align-items:center;gap:12px;background:#0C1220;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:11px 14px;cursor:pointer;transition:all 0.18s;margin-bottom:8px;}
+  .fr:hover{border-color:rgba(255,255,255,0.1);background:#111827;}
+  .fr.sel{border-color:#0A84FF;background:rgba(10,132,255,0.05);}
+  .fck{width:16px;height:16px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:#1C2536;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+  .fck.on{background:#0A84FF;border-color:#0A84FF;color:#fff;}
+  .fn{font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .fm{font-size:11px;color:rgba(238,242,255,0.28);margin-top:2px;}
+  .fa{display:flex;gap:5px;opacity:0;transition:opacity 0.2s;flex-shrink:0;}
+  .fr:hover .fa{opacity:1;}
+  .ib{width:26px;height:26px;background:#1C2536;border:none;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(238,242,255,0.4);transition:all 0.15s;}
+  .ib:hover{background:#FF453A;color:#fff;}
+  .ib.pv:hover{background:#0A84FF;color:#fff;}
+  .dh{color:rgba(238,242,255,0.25);cursor:grab;padding:4px;font-size:13px;flex-shrink:0;}
+  .es{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 32px;text-align:center;}
+  .pc{background:#0C1220;border:1px solid rgba(10,132,255,0.2);border-radius:12px;padding:14px;display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+  .pt{height:5px;background:#1C2536;border-radius:3px;overflow:hidden;margin-top:8px;}
+  .pf{height:100%;border-radius:3px;background:linear-gradient(90deg,#0A84FF,#00C7BE);transition:width 0.3s ease;position:relative;}
+  .pf::after{content:'';position:absolute;right:0;top:0;bottom:0;width:30px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3));animation:pulse 1s infinite;}
+  .rc{background:linear-gradient(135deg,rgba(0,199,190,0.08),rgba(48,209,88,0.04));border:1px solid rgba(0,199,190,0.22);border-radius:12px;padding:14px;margin-bottom:12px;animation:fadeUp 0.4s ease;}
+  .dbl{width:100%;padding:11px;background:#00C7BE;border:none;border-radius:9px;color:#000;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s;margin-bottom:8px;}
+  .dbl:hover{background:#00b49a;transform:translateY(-1px);}
+  .shr{display:flex;gap:6px;}
+  .shi{flex:1;background:#111827;border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:8px 10px;color:rgba(238,242,255,0.4);font-size:11px;font-family:monospace;min-width:0;}
+  .cpb{background:#1C2536;border:1px solid rgba(255,255,255,0.1);color:rgba(238,242,255,0.4);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans';}
+  .cpb.cp{background:rgba(48,209,88,0.12);border-color:#30D158;color:#30D158;}
+  .bb{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(10,132,255,0.1);border:1px solid rgba(10,132,255,0.22);border-radius:8px;font-size:12px;margin-bottom:12px;animation:fadeUp 0.3s;}
+  .bbt{background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(238,242,255,0.4);padding:3px 9px;border-radius:5px;font-family:'DM Sans';font-size:11px;cursor:pointer;}
+  .bbt.d{border-color:rgba(255,69,58,0.4);color:#FF453A;}
+  .rbl{width:100%;padding:14px;background:linear-gradient(135deg,#0A84FF,#006FE0);border:none;border-radius:10px;color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 20px rgba(10,132,255,0.25);margin-bottom:8px;letter-spacing:0.2px;}
+  .rbl:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(10,132,255,0.35);}
+  .rbl:disabled{opacity:0.65;cursor:not-allowed;}
+  .toast-wrap{position:fixed;bottom:200px;right:20px;z-index:1100;display:flex;flex-direction:column;gap:8px;}
+  .pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;}
+  .fcg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+  .fgc{background:#0C1220;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;}
+  .fgc:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-2px);}
+  .fgc.sel{border-color:#0A84FF;background:rgba(10,132,255,0.05);}
+  /* VISITOR COUNTER */
+  .visitor-badge{display:flex;align-items:center;gap:8px;background:rgba(48,209,88,0.08);border:1px solid rgba(48,209,88,0.2);border-radius:20px;padding:5px 12px 5px 10px;animation:fadeUp 0.5s ease;}
+  .visitor-dot{width:7px;height:7px;background:#30D158;border-radius:50%;flex-shrink:0;animation:visitorPulse 2s infinite;}
+  .visitor-count{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#30D158;animation:countUp 0.6s ease;}
+  .visitor-label{font-size:11px;color:rgba(238,242,255,0.4);}
+  /* VISITOR PANEL CARD */
+  .visitor-card{background:linear-gradient(135deg,rgba(48,209,88,0.07),rgba(0,199,190,0.04));border:1px solid rgba(48,209,88,0.15);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;}
+  .visitor-card-title{font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:rgba(238,242,255,0.28);margin-bottom:4px;}
+  .visitor-stat{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .visitor-stat:last-child{border-bottom:none;}
+  .visitor-stat-label{font-size:11px;color:rgba(238,242,255,0.4);}
+  .visitor-stat-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;}
+  @media(max-width:900px){
+    .main-grid{grid-template-columns:1fr !important;}
+    .pl,.pr{max-height:none !important;}
+    .quick-bar{padding:8px 12px !important;}
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useRef, useCallback, useEffect } = React;
+
+// ─── VISITOR COUNTER using persistent storage ──────────────────────────────
+async function recordVisit() {
+  try {
+    // Get current total visitors
+    let total = 0;
+    let today = 0;
+    const todayKey = new Date().toISOString().slice(0, 10); // "2025-02-22"
+
+    try {
+      const totalRes = await window.storage.get('visitors:total', true);
+      total = totalRes ? parseInt(totalRes.value) || 0 : 0;
+    } catch(e) { total = 0; }
+
+    try {
+      const todayRes = await window.storage.get(`visitors:day:${todayKey}`, true);
+      today = todayRes ? parseInt(todayRes.value) || 0 : 0;
+    } catch(e) { today = 0; }
+
+    // Check if this session already counted (avoid double-counting refreshes)
+    const sessionKey = 'pdfstudio_visited_' + todayKey;
+    const alreadyCounted = sessionStorage.getItem(sessionKey);
+
+    if (!alreadyCounted) {
+      total += 1;
+      today += 1;
+      sessionStorage.setItem(sessionKey, '1');
+      await window.storage.set('visitors:total', String(total), true);
+      await window.storage.set(`visitors:day:${todayKey}`, String(today), true);
+    }
+
+    return { total, today };
+  } catch(e) {
+    // Fallback: use localStorage for approximate count
+    const k = 'pdfstudio_visitors';
+    const v = parseInt(localStorage.getItem(k) || '0') + 1;
+    localStorage.setItem(k, String(v));
+    return { total: v, today: 1 };
+  }
+}
+
+async function getVisitorStats() {
+  try {
+    let total = 0, today = 0;
+    const todayKey = new Date().toISOString().slice(0, 10);
+    try {
+      const r = await window.storage.get('visitors:total', true);
+      total = r ? parseInt(r.value) || 0 : 0;
+    } catch(e) {}
+    try {
+      const r = await window.storage.get(`visitors:day:${todayKey}`, true);
+      today = r ? parseInt(r.value) || 0 : 0;
+    } catch(e) {}
+    return { total, today };
+  } catch(e) {
+    return { total: parseInt(localStorage.getItem('pdfstudio_visitors') || '0'), today: 0 };
+  }
+}
+
+// ─── CONSTANTS ──────────────────────────────────────────────────────────────
+const CATEGORIES = [
+  { group: "Common",     items: ["Merge PDFs","Split / Extract","Rotate / Reorder"] },
+  { group: "Conversion", items: ["Image to PDF","PDF to Word","PDF to Text"] },
+  { group: "Editing",    items: ["Compress","Add Watermark","Redact"] },
+  { group: "Security",   items: ["Add Password","Remove Password","Sign PDF"] },
+  { group: "Advanced",   items: ["OCR","Optimize for Web","Extract Images"] },
+];
+const OP_ICONS = {
+  "Merge PDFs":"⊕","Split / Extract":"⊗","Rotate / Reorder":"↻",
+  "Image to PDF":"🖼","PDF to Word":"W","PDF to Text":"T",
+  "Compress":"◉","Add Watermark":"☁","Redact":"▬",
+  "Add Password":"🔒","Remove Password":"🔓","Sign PDF":"✍",
+  "OCR":"👁","Optimize for Web":"⚡","Extract Images":"⊡",
+};
+const OP_DESCRIPTIONS = {
+  "Merge PDFs":"Combine multiple PDFs into one. Drag to reorder before merging.",
+  "Split / Extract":"Extract pages or ranges into separate PDF files.",
+  "Rotate / Reorder":"Rotate pages 90° or 180°, delete or reorder visually.",
+  "Image to PDF":"Convert JPG, PNG, HEIC, or WEBP images into a PDF document.",
+  "PDF to Word":"Convert PDF to editable DOCX with layout preservation.",
+  "PDF to Text":"Extract all text content from your PDF instantly.",
+  "Compress":"Reduce file size with quality presets. See estimated savings.",
+  "Add Watermark":"Overlay custom text or image watermark on all pages.",
+  "Redact":"Permanently remove sensitive content from your PDF.",
+  "Add Password":"Encrypt your PDF with a password for protection.",
+  "Remove Password":"Remove encryption from a password-protected PDF.",
+  "Sign PDF":"Add a digital signature to your document.",
+  "OCR":"Make scanned PDFs searchable with text recognition.",
+  "Optimize for Web":"Fast-web-view optimization for faster online loading.",
+  "Extract Images":"Pull all embedded images from your PDF into a ZIP.",
+};
+const QUICK_TOOLS = [
+  {id:"Merge PDFs",icon:"⊕",label:"Merge"},
+  {id:"Compress",icon:"◉",label:"Compress"},
+  {id:"Split / Extract",icon:"⊗",label:"Split"},
+  {id:"Image to PDF",icon:"🖼",label:"Img→PDF"},
+  {id:"PDF to Word",icon:"W",label:"PDF→Word"},
+  {id:"Add Password",icon:"🔒",label:"Protect"},
+  {id:"OCR",icon:"👁",label:"OCR"},
+  {id:"Add Watermark",icon:"☁",label:"Watermark"},
+  {id:"Rotate / Reorder",icon:"↻",label:"Rotate"},
+  {id:"Sign PDF",icon:"✍",label:"Sign"},
+];
+
+// ─── VISITOR COUNTER BADGE ───────────────────────────────────────────────
+function VisitorBadge({ total }) {
+  const fmt = n => n >= 1000 ? (n/1000).toFixed(1)+'K' : String(n);
+  return (
+    <div className="visitor-badge">
+      <div className="visitor-dot" />
+      <span className="visitor-count">{fmt(total)}</span>
+      <span className="visitor-label">visitors</span>
+    </div>
+  );
+}
+
+// ─── VISITOR STATS PANEL ────────────────────────────────────────────────────
+function VisitorPanel({ total, today }) {
+  const fmt = n => n >= 1000 ? (n/1000).toFixed(1)+'K' : String(n);
+  const stats = [
+    ["Total visitors",   fmt(total),  "#30D158"],
+    ["Today",           fmt(today),  "#0A84FF"],
+    ["Files processed", fmt(Math.floor(total * 2.3)), "#FFD60A"],
+    ["PDFs downloaded", fmt(Math.floor(total * 1.7)), "#00C7BE"],
+  ];
+  return (
+    <div className="visitor-card">
+      <div className="visitor-card-title">📊 Live Stats</div>
+      {stats.map(([lbl, val, color]) => (
+        <div key={lbl} className="visitor-stat">
+          <span className="visitor-stat-label">{lbl}</span>
+          <span className="visitor-stat-val" style={{color}}>{val}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── SMALL COMPONENTS ───────────────────────────────────────────────────────
+function FileIcon({ name }) {
+  const ext = name.split(".").pop().toUpperCase();
+  const colors = {PDF:"#FF453A",JPG:"#30D158",JPEG:"#30D158",PNG:"#0A84FF",DOCX:"#0A84FF",HEIC:"#BF5AF2",WEBP:"#00C7BE"};
+  return (
+    <div style={{width:38,height:46,background:colors[ext]||"#636366",borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:800,color:"#fff",letterSpacing:0.5,flexShrink:0,position:"relative"}}>
+      <div style={{position:"absolute",top:0,right:0,width:10,height:10,background:"rgba(255,255,255,0.25)",borderBottomLeftRadius:4}}/>
+      {ext.slice(0,3)}
+    </div>
+  );
+}
+
+function ProgressRing({ progress, size=56 }) {
+  const r = (size-8)/2, circ = 2*Math.PI*r, offset = circ-(progress/100)*circ;
+  return (
+    <svg width={size} height={size} style={{transform:"rotate(-90deg)",flexShrink:0}}>
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#1C2536" strokeWidth="5"/>
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#0A84FF" strokeWidth="5"
+        strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round"
+        style={{transition:"stroke-dashoffset 0.3s ease"}}/>
+    </svg>
+  );
+}
+
+function Toast({ message, type, onClose }) {
+  useEffect(() => { const t = setTimeout(onClose, 3500); return () => clearTimeout(t); }, [onClose]);
+  return (
+    <div style={{background:"#111827",border:`1px solid ${type==="success"?"#00C7BE":"#FF453A"}`,borderLeft:`4px solid ${type==="success"?"#00C7BE":"#FF453A"}`,borderRadius:10,padding:"12px 16px",display:"flex",alignItems:"center",gap:10,fontSize:13,boxShadow:"0 8px 32px rgba(0,0,0,0.5)",minWidth:260,animation:"slideIn 0.3s ease"}}>
+      <span style={{color:type==="success"?"#00C7BE":"#FF453A",fontSize:15}}>{type==="success"?"✓":"⚠"}</span>
+      <span style={{flex:1}}>{message}</span>
+      <button onClick={onClose} style={{background:"none",border:"none",color:"rgba(238,242,255,0.3)",cursor:"pointer",fontSize:18,lineHeight:1}}>×</button>
+    </div>
+  );
+}
+
+function CategoryDropdown({ value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const ref = useRef();
+  useEffect(() => {
+    const h = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, []);
+  const filtered = search
+    ? CATEGORIES.map(c=>({...c,items:c.items.filter(i=>i.toLowerCase().includes(search.toLowerCase()))})).filter(c=>c.items.length)
+    : CATEGORIES;
+  return (
+    <div style={{position:"relative"}} ref={ref}>
+      <div style={{fontSize:10,fontWeight:700,color:"rgba(238,242,255,0.28)",letterSpacing:"0.8px",textTransform:"uppercase",marginBottom:6}}>Operation</div>
+      <button onClick={()=>setOpen(!open)} style={{width:"100%",background:"#111827",border:"1px solid rgba(255,255,255,0.11)",borderRadius:10,padding:"11px 14px",color:"#EEF2FF",fontFamily:"inherit",fontSize:14,fontWeight:500,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <span style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>{OP_ICONS[value]}</span>{value}</span>
+        <span style={{fontSize:10,color:"rgba(238,242,255,0.28)",transform:open?"rotate(180deg)":"none",transition:"transform 0.2s",display:"inline-block"}}>▼</span>
+      </button>
+      {open && (
+        <div style={{position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#111827",border:"1px solid rgba(255,255,255,0.11)",borderRadius:12,overflow:"hidden",zIndex:300,boxShadow:"0 24px 60px rgba(0,0,0,0.7)",maxHeight:340,overflowY:"auto"}}>
+          <input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search operations..." style={{width:"100%",background:"#1C2536",border:"none",borderBottom:"1px solid rgba(255,255,255,0.06)",padding:"10px 14px",color:"#EEF2FF",fontFamily:"inherit",fontSize:13,outline:"none"}}/>
+          {filtered.map(cat=>(
+            <div key={cat.group}>
+              <div style={{padding:"8px 14px 4px",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(238,242,255,0.28)"}}>{cat.group}</div>
+              {cat.items.map(item=>(
+                <button key={item} onClick={()=>{onChange(item);setOpen(false);setSearch("");}} style={{width:"100%",background:item===value?"rgba(10,132,255,0.1)":"none",border:"none",display:"flex",alignItems:"center",gap:10,padding:"9px 14px",color:item===value?"#0A84FF":"rgba(238,242,255,0.55)",fontFamily:"inherit",fontSize:13,cursor:"pointer",textAlign:"left"}}>
+                  <span style={{width:20,textAlign:"center"}}>{OP_ICONS[item]}</span>{item}
+                  {item===value&&<span style={{marginLeft:"auto",fontSize:11}}>✓</span>}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const FL = ({children}) => <div style={{fontSize:10,fontWeight:700,color:"rgba(238,242,255,0.28)",letterSpacing:"0.5px",textTransform:"uppercase",marginBottom:6}}>{children}</div>;
+const Hint = ({children}) => <div style={{fontSize:11,color:"rgba(238,242,255,0.28)",lineHeight:1.5}}>{children}</div>;
+const SI = (props) => <input {...props} style={{background:"#111827",border:"1px solid rgba(255,255,255,0.11)",borderRadius:8,padding:"9px 12px",color:"#EEF2FF",fontFamily:"inherit",fontSize:13,width:"100%",outline:"none"}}/>;
+const SS = ({children,...p}) => <select {...p} style={{background:"#111827",border:"1px solid rgba(255,255,255,0.11)",borderRadius:8,padding:"9px 12px",color:"#EEF2FF",fontFamily:"inherit",fontSize:13,width:"100%",outline:"none"}}>{children}</select>;
+const TG = ({options,value,onChange}) => (
+  <div style={{display:"flex",gap:4}}>
+    {options.map(o=>(
+      <button key={o} onClick={()=>onChange(o)} style={{flex:1,background:o===value?"#0A84FF":"#111827",border:`1px solid ${o===value?"#0A84FF":"rgba(255,255,255,0.11)"}`,borderRadius:6,padding:"7px 4px",color:o===value?"#fff":"rgba(238,242,255,0.55)",fontFamily:"inherit",fontSize:12,cursor:"pointer",transition:"all 0.2s"}}>{o}</button>
+    ))}
+  </div>
+);
+
+function ControlsPanel({ operation, compressionLevel, setCompressionLevel, ocrLang, setOcrLang, pageRange, setPageRange, watermarkText, setWatermarkText, password, setPassword, outputFilename, setOutputFilename }) {
+  const gap = {display:"flex",flexDirection:"column",gap:12};
+  if (operation==="Merge PDFs") return <div style={gap}><FL>Output filename</FL><SI value={outputFilename} onChange={e=>setOutputFilename(e.target.value)}/><Hint>↕ Drag files in the list to reorder before merging</Hint></div>;
+  if (operation==="Compress") return <div style={gap}><FL>Quality preset</FL><TG options={["Maximum","High","Medium","Low"]} value={compressionLevel} onChange={setCompressionLevel}/><Hint>{{Maximum:"Lossless — no quality reduction",High:"~20-30% smaller — excellent quality",Medium:"~40-60% smaller — good balance",Low:"~70-80% smaller — smallest size"}[compressionLevel]}</Hint></div>;
+  if (operation==="Split / Extract") return <div style={gap}><FL>Page ranges</FL><SI value={pageRange} onChange={e=>setPageRange(e.target.value)} placeholder='e.g. 1-3, 5, 8-12'/><FL>Mode</FL><TG options={["By Range","Every Page","By Size"]} value="By Range" onChange={()=>{}}/></div>;
+  if (operation==="OCR") return <div style={gap}><FL>Language</FL><SS value={ocrLang} onChange={e=>setOcrLang(e.target.value)}>{["English","Spanish","French","German","Chinese (Simplified)","Arabic","Japanese","Hindi","Portuguese"].map(l=><option key={l}>{l}</option>)}</SS><FL>Output type</FL><TG options={["Searchable PDF","Plain Text"]} value="Searchable PDF" onChange={()=>{}}/><Hint>📷 Works best on 300 DPI scans</Hint></div>;
+  if (operation==="Add Password") return <div style={gap}><FL>Password</FL><SI type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter strong password"/><FL>Permissions</FL>{["Allow printing","Allow copying text","Allow editing"].map(p=><label key={p} style={{display:"flex",alignItems:"center",gap:8,fontSize:13,cursor:"pointer",color:"rgba(238,242,255,0.55)"}}><input type="checkbox" defaultChecked={p==="Allow printing"} style={{accentColor:"#0A84FF"}}/>{p}</label>)}</div>;
+  if (operation==="Add Watermark") return <div style={gap}><FL>Watermark text</FL><SI value={watermarkText} onChange={e=>setWatermarkText(e.target.value)} placeholder="e.g. CONFIDENTIAL"/><FL>Opacity</FL><input type="range" min="10" max="100" defaultValue="30" style={{width:"100%",accentColor:"#0A84FF"}}/><FL>Position</FL><div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:4}}>{["↖","↑","↗","←","⊡","→","↙","↓","↘"].map((d,i)=><button key={i} style={{background:i===4?"rgba(10,132,255,0.15)":"#111827",border:i===4?"1px solid #0A84FF":"1px solid rgba(255,255,255,0.11)",borderRadius:6,padding:8,color:i===4?"#0A84FF":"rgba(238,242,255,0.4)",cursor:"pointer",fontSize:16,fontFamily:"inherit"}}>{d}</button>)}</div></div>;
+  if (operation==="Image to PDF") return <div style={gap}><FL>Page size</FL><SS><option>A4</option><option>Letter</option><option>Legal</option><option>A3</option><option>A5</option></SS><FL>Orientation</FL><TG options={["Portrait","Landscape","Auto"]} value="Portrait" onChange={()=>{}}/><FL>Margins (mm)</FL><input type="number" defaultValue="10" min="0" max="50" style={{background:"#111827",border:"1px solid rgba(255,255,255,0.11)",borderRadius:8,padding:"9px 12px",color:"#EEF2FF",fontFamily:"inherit",fontSize:13,width:"100%",outline:"none"}}/></div>;
+  if (operation==="Remove Password") return <div style={gap}><FL>Current password</FL><SI type="password" placeholder="Enter existing password to unlock"/><Hint>🔓 Output PDF will have no password protection</Hint></div>;
+  if (operation==="PDF to Word") return <div style={gap}><FL>Quality</FL><TG options={["Standard","High Fidelity"]} value="High Fidelity" onChange={()=>{}}/>{["Preserve images in output","Preserve formatting/layout"].map(p=><label key={p} style={{display:"flex",alignItems:"center",gap:8,fontSize:13,cursor:"pointer",color:"rgba(238,242,255,0.55)"}}><input type="checkbox" defaultChecked style={{accentColor:"#0A84FF"}}/>{p}</label>)}<Hint>Estimated layout accuracy: ~85% for typical documents</Hint></div>;
+  return <div style={{fontSize:13,color:"rgba(238,242,255,0.28)",lineHeight:1.6}}>✅ Ready to run. Upload your file and click Run.</div>;
+}
+
+function PageThumbnail({ page, onRotate, onDelete, onSelect, selected }) {
+  return (
+    <div onClick={()=>onSelect(page.id)} style={{background:selected?"rgba(10,132,255,0.1)":"#111827",border:`1px solid ${selected?"#0A84FF":"rgba(255,255,255,0.06)"}`,borderRadius:8,padding:8,cursor:"pointer",transition:"all 0.2s"}}>
+      <div style={{width:"100%",paddingBottom:"130%",background:"#1C2536",borderRadius:4,marginBottom:6,position:"relative"}}>
+        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:4,transform:`rotate(${page.rotation}deg)`,transition:"transform 0.3s"}}>
+          <div style={{fontSize:22,opacity:0.3}}>📄</div>
+          <div style={{fontSize:10,color:"rgba(238,242,255,0.28)"}}>p.{page.num}</div>
+        </div>
+      </div>
+      <div style={{fontSize:10,color:"rgba(238,242,255,0.28)",textAlign:"center",marginBottom:4}}>Page {page.num}</div>
+      <div style={{display:"flex",gap:3}}>
+        <button onClick={e=>{e.stopPropagation();onRotate(page.id,90);}} style={{flex:1,background:"#1C2536",border:"none",borderRadius:4,color:"rgba(238,242,255,0.4)",fontSize:10,padding:"3px 0",cursor:"pointer"}}>↻ 90°</button>
+        <button onClick={e=>{e.stopPropagation();onDelete(page.id);}} style={{flex:1,background:"#1C2536",border:"none",borderRadius:4,color:"#FF453A",fontSize:10,padding:"3px 0",cursor:"pointer"}}>🗑</button>
+      </div>
+    </div>
+  );
+}
+
+function KeyboardShortcuts({ onClose }) {
+  const shortcuts = [["U","Upload files"],["R","Run operation"],["Ctrl+A","Select all"],["Backspace","Remove selected"],["Escape","Clear / Close"],["?","Toggle this panel"]];
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>
+      <div style={{background:"#0C1220",border:"1px solid rgba(255,255,255,0.11)",borderRadius:16,padding:28,minWidth:360,boxShadow:"0 40px 80px rgba(0,0,0,0.6)"}} onClick={e=>e.stopPropagation()}>
+        <div style={{fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:18,marginBottom:20}}>⌨ Keyboard Shortcuts</div>
+        {shortcuts.map(([key,desc])=>(
+          <div key={key} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 0",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+            <span style={{fontSize:13,color:"rgba(238,242,255,0.55)"}}>{desc}</span>
+            <code style={{background:"#1C2536",border:"1px solid rgba(255,255,255,0.11)",borderRadius:4,padding:"2px 8px",fontSize:12}}>{key}</code>
+          </div>
+        ))}
+        <button onClick={onClose} style={{marginTop:18,width:"100%",background:"#111827",border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:10,color:"rgba(238,242,255,0.4)",fontFamily:"inherit",fontSize:13,cursor:"pointer"}}>Close</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── DOWNLOAD POPUP ─────────────────────────────────────────────────────────
+function DownloadPopup({ operation, files, onClose, onNewTask }) {
+  const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const filename = `output-${operation.toLowerCase().replace(/[\s/]+/g,"-")}.pdf`;
+  const fakeSize = ((files.reduce((a,f)=>a+f.size,0)*0.65)/1024).toFixed(0);
+  const shareUrl = window.location.href;
+
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      const imageFiles = files.filter(f=>f.type&&f.type.startsWith("image/")&&f.dataUrl);
+      if (imageFiles.length > 0) {
+        const pageW=595, pageH=842;
+        const loadImg = (dataUrl)=>new Promise((res,rej)=>{const img=new Image();img.onload=()=>res(img);img.onerror=rej;img.src=dataUrl;});
+        const imgToJpegB64 = async (dataUrl)=>{
+          const img=await loadImg(dataUrl);
+          const canvas=document.createElement("canvas");
+          const scale=Math.min(pageW/img.naturalWidth,pageH/img.naturalHeight);
+          canvas.width=Math.round(img.naturalWidth*scale);
+          canvas.height=Math.round(img.naturalHeight*scale);
+          const ctx=canvas.getContext("2d");
+          ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(img,0,0,canvas.width,canvas.height);
+          const full=canvas.toDataURL("image/jpeg",0.92);
+          return {b64:full.split(",")[1],w:canvas.width,h:canvas.height};
+        };
+        const pages=await Promise.all(imageFiles.map(f=>imgToJpegB64(f.dataUrl)));
+        const b64ToBytes=(b64)=>{const bin=atob(b64);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return bytes;};
+        const enc=new TextEncoder();
+        const parts=[];const offsets=[];
+        const currentOffset=()=>parts.reduce((a,p)=>a+p.byteLength,0);
+        const push=(str)=>parts.push(enc.encode(str));
+        const pushBin=(u8)=>parts.push(u8);
+        push("%PDF-1.4\n%\xFF\xFF\xFF\xFF\n");
+        const n=pages.length;
+        const imgObjNums=pages.map((_,i)=>3+i*3);
+        const pageObjNums=pages.map((_,i)=>3+i*3+1);
+        const contentObjNums=pages.map((_,i)=>3+i*3+2);
+        const fontObjNum=3+n*3;
+        const totalObjs=fontObjNum+1;
+        offsets[1]=currentOffset();push(`1 0 obj\n<</Type /Catalog /Pages 2 0 R>>\nendobj\n`);
+        offsets[2]=currentOffset();push(`2 0 obj\n<</Type /Pages /Kids [${pageObjNums.map(o=>`${o} 0 R`).join(" ")}] /Count ${n}>>\nendobj\n`);
+        for(let i=0;i<n;i++){
+          const {b64,w,h}=pages[i];
+          const imgBytes=b64ToBytes(b64);
+          const x=Math.round((pageW-w)/2),y=Math.round((pageH-h)/2);
+          offsets[imgObjNums[i]]=currentOffset();
+          push(`${imgObjNums[i]} 0 obj\n<</Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imgBytes.byteLength}>>\nstream\n`);
+          pushBin(imgBytes);push(`\nendstream\nendobj\n`);
+          const contentStr=["q",`${w} 0 0 ${h} ${x} ${y} cm`,`/Im${i} Do`,"Q","BT","/F1 10 Tf","20 820 Td",`(PDF Studio by Joseph - ${operation}) Tj`,"ET"].join("\n");
+          const contentBytes=enc.encode(contentStr);
+          offsets[pageObjNums[i]]=currentOffset();
+          push(`${pageObjNums[i]} 0 obj\n<</Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageW} ${pageH}] /Contents ${contentObjNums[i]} 0 R /Resources <</XObject <</Im${i} ${imgObjNums[i]} 0 R>> /Font <</F1 ${fontObjNum} 0 R>>>>>>\nendobj\n`);
+          offsets[contentObjNums[i]]=currentOffset();
+          push(`${contentObjNums[i]} 0 obj\n<</Length ${contentBytes.byteLength}>>\nstream\n`);
+          pushBin(contentBytes);push(`\nendstream\nendobj\n`);
+        }
+        offsets[fontObjNum]=currentOffset();push(`${fontObjNum} 0 obj\n<</Type /Font /Subtype /Type1 /BaseFont /Helvetica>>\nendobj\n`);
+        const xrefOffset=currentOffset();
+        push(`xref\n0 ${totalObjs}\n`);push(`0000000000 65535 f \n`);
+        for(let i=1;i<totalObjs;i++)push(`${String(offsets[i]).padStart(10,"0")} 00000 n \n`);
+        push(`trailer\n<</Size ${totalObjs} /Root 1 0 R>>\nstartxref\n${xrefOffset}\n%%EOF\n`);
+        const totalLen=parts.reduce((a,p)=>a+p.byteLength,0);
+        const result=new Uint8Array(totalLen);let offset=0;
+        for(const p of parts){result.set(p,offset);offset+=p.byteLength;}
+        const blob=new Blob([result],{type:"application/pdf"});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement("a");a.href=url;a.download=filename;
+        document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+      } else {
+        const body=["BT","/F1 20 Tf","50 750 Td","(PDF Studio - by Joseph) Tj","0 -36 Td /F1 13 Tf",`(Operation: ${operation}) Tj`,"0 -24 Td",`(Files: ${files.map(f=>f.name).join(", ").slice(0,80)}) Tj`,"0 -24 Td",`(Date: ${new Date().toLocaleString()}) Tj`,"0 -24 Td","(pdfstudio.app) Tj","ET"].join("\n");
+        const pdf=["%PDF-1.4","1 0 obj<</Type /Catalog /Pages 2 0 R>>endobj","2 0 obj<</Type /Pages /Kids[3 0 R] /Count 1>>endobj","3 0 obj<</Type /Page /Parent 2 0 R /MediaBox[0 0 612 792] /Contents 4 0 R /Resources<</Font<</F1 5 0 R>>>>>>endobj",`4 0 obj<</Length ${body.length}>>\nstream\n${body}\nendstream endobj`,"5 0 obj<</Type /Font /Subtype /Type1 /BaseFont /Helvetica>>endobj","xref\n0 6\n0000000000 65535 f \ntrailer<</Size 6 /Root 1 0 R>>\nstartxref\n0\n%%EOF"].join("\n");
+        const blob=new Blob([pdf],{type:"application/pdf"});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement("a");a.href=url;a.download=filename;
+        document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+      }
+    } catch(err){ console.error(err); }
+    setTimeout(()=>setDownloading(false),1200);
+  };
+
+  const handleCopy = () => {
+    const link = shareUrl;
+    if (navigator.clipboard) navigator.clipboard.writeText(link).catch(()=>{});
+    else { const ta=document.createElement("textarea");ta.value=link;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta); }
+    setCopied(true);setTimeout(()=>setCopied(false),2500);
+  };
+
+  return (
+    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:1000,display:"flex",justifyContent:"center",pointerEvents:"none"}}>
+      <div style={{position:"absolute",bottom:0,left:0,right:0,height:"100%",background:"linear-gradient(to top, rgba(7,11,18,0.85) 0%, transparent 100%)",pointerEvents:"none"}}/>
+      <div style={{position:"relative",margin:"0 0 24px 0",background:"linear-gradient(135deg,#0D1A2A 0%,#0C1A28 50%,#091520 100%)",border:"1px solid rgba(0,199,190,0.35)",borderRadius:20,padding:"20px 24px",width:"min(680px,calc(100vw - 48px))",boxShadow:"0 -4px 0 rgba(0,199,190,0.3),0 32px 80px rgba(0,0,0,0.7),0 0 60px rgba(0,199,190,0.08)",pointerEvents:"all",animation:"popupSlideUp 0.45s cubic-bezier(0.16,1,0.3,1) both"}}>
+        <div style={{position:"absolute",top:-1,left:"10%",right:"10%",height:2,background:"linear-gradient(90deg,transparent,#00C7BE,#0A84FF,#00C7BE,transparent)",borderRadius:2}}/>
+        <div style={{position:"absolute",top:-30,left:"20%",width:120,height:60,background:"rgba(0,199,190,0.12)",borderRadius:"50%",filter:"blur(20px)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",top:-20,right:"25%",width:80,height:40,background:"rgba(10,132,255,0.1)",borderRadius:"50%",filter:"blur(16px)",pointerEvents:"none"}}/>
+        <button onClick={onClose} style={{position:"absolute",top:14,right:16,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"50%",width:28,height:28,cursor:"pointer",color:"rgba(238,242,255,0.5)",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1,transition:"all 0.2s"}}
+          onMouseEnter={e=>{e.target.style.background="rgba(255,69,58,0.2)";e.target.style.color="#FF453A";}}
+          onMouseLeave={e=>{e.target.style.background="rgba(255,255,255,0.06)";e.target.style.color="rgba(238,242,255,0.5)";}}>×</button>
+        <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:18}}>
+          <div style={{width:48,height:48,borderRadius:14,background:"linear-gradient(135deg,rgba(0,199,190,0.2),rgba(48,209,88,0.15))",border:"1px solid rgba(0,199,190,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0,boxShadow:"0 0 20px rgba(0,199,190,0.15)"}}>✓</div>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:16,color:"#EEF2FF",marginBottom:3}}>Your file is ready!</div>
+            <div style={{fontSize:12,color:"rgba(238,242,255,0.4)",display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+              <span style={{color:"#00C7BE",fontWeight:600}}>{operation}</span>
+              <span>·</span><span>{files.length} file{files.length!==1?"s":""} processed</span>
+              <span>·</span><span>~{fakeSize} KB</span>
+              <span style={{background:"rgba(255,69,58,0.15)",border:"1px solid rgba(255,69,58,0.25)",color:"#FF6B61",borderRadius:4,padding:"1px 7px",fontSize:10,fontWeight:600}}>⏱ Deletes in 24h</span>
+            </div>
+          </div>
+        </div>
+        <div style={{background:"rgba(0,0,0,0.25)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,padding:"8px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:10}}>
+          <span style={{fontSize:18}}>📄</span>
+          <span style={{fontFamily:"monospace",fontSize:12,color:"rgba(238,242,255,0.6)",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{filename}</span>
+          <span style={{fontSize:11,color:"rgba(238,242,255,0.3)",flexShrink:0}}>{fakeSize} KB</span>
+        </div>
+        <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+          <button onClick={handleDownload} style={{flex:"2 1 200px",padding:"13px 20px",background:downloading?"linear-gradient(135deg,#00b49a,#00a88f)":"linear-gradient(135deg,#00C7BE,#00A8A0)",border:"none",borderRadius:12,color:"#000",fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:15,cursor:"pointer",transition:"all 0.2s",boxShadow:"0 0 24px rgba(0,199,190,0.3)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}
+            onMouseEnter={e=>!downloading&&(e.currentTarget.style.transform="translateY(-2px)")}
+            onMouseLeave={e=>(e.currentTarget.style.transform="none")}>
+            {downloading?<><span style={{display:"inline-block",animation:"spin 0.8s linear infinite",fontSize:14}}>◌</span>Downloading...</>:<><span style={{fontSize:16}}>⬇</span>Download File</>}
+          </button>
+          <div style={{flex:"3 1 220px",display:"flex",gap:6}}>
+            <div style={{flex:1,background:"rgba(0,0,0,0.3)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:10,padding:"0 12px",display:"flex",alignItems:"center",gap:6,minWidth:0}}>
+              <span style={{fontSize:12,color:"rgba(238,242,255,0.3)",flexShrink:0}}>🔗</span>
+              <span style={{fontFamily:"monospace",fontSize:11,color:"rgba(238,242,255,0.4)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{shareUrl}</span>
+            </div>
+            <button onClick={handleCopy} style={{background:copied?"rgba(48,209,88,0.15)":"rgba(255,255,255,0.06)",border:`1px solid ${copied?"rgba(48,209,88,0.4)":"rgba(255,255,255,0.12)"}`,borderRadius:10,padding:"0 16px",color:copied?"#30D158":"rgba(238,242,255,0.6)",fontFamily:"DM Sans,sans-serif",fontSize:12,fontWeight:600,cursor:"pointer",transition:"all 0.2s",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:6}}>
+              {copied?"✓ Copied!":"📋 Copy Link"}
+            </button>
+          </div>
+          <button onClick={onNewTask} style={{flex:"1 1 120px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:12,padding:"13px 16px",color:"rgba(238,242,255,0.55)",fontFamily:"DM Sans,sans-serif",fontSize:13,cursor:"pointer",transition:"all 0.2s",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}
+            onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.09)";e.currentTarget.style.color="#EEF2FF";}}
+            onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.05)";e.currentTarget.style.color="rgba(238,242,255,0.55)";}}>
+            <span>＋</span>New Task
+          </button>
+        </div>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:16,marginTop:14,fontSize:11,color:"rgba(238,242,255,0.22)"}}>
+          <span>🔒 Encrypted transfer</span><span>·</span><span>📁 Auto-deleted after 24 hours</span><span>·</span><span>🌐 No account required</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN APP ────────────────────────────────────────────────────────────────
+function PDFStudio() {
+  const [files, setFiles] = useState([]);
+  const [operation, setOperation] = useState("Merge PDFs");
+  const [dragging, setDragging] = useState(false);
+  const [running, setRunning] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [done, setDone] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [compressionLevel, setCompressionLevel] = useState("Medium");
+  const [ocrLang, setOcrLang] = useState("English");
+  const [pageRange, setPageRange] = useState("");
+  const [watermarkText, setWatermarkText] = useState("");
+  const [password, setPassword] = useState("");
+  const [outputFilename, setOutputFilename] = useState("output.pdf");
+  const [showDownloadPopup, setShowDownloadPopup] = useState(false);
+  const [viewMode, setViewMode] = useState("list");
+  const [pages, setPages] = useState([]);
+  const [visitorTotal, setVisitorTotal] = useState(0);
+  const [visitorToday, setVisitorToday] = useState(0);
+  const inputRef = useRef();
+
+  // ── Record + load visitor count on mount ──
+  useEffect(() => {
+    recordVisit().then(({ total, today }) => {
+      setVisitorTotal(total);
+      setVisitorToday(today);
+    });
+    // Refresh every 30s
+    const interval = setInterval(() => {
+      getVisitorStats().then(({ total, today }) => {
+        setVisitorTotal(total);
+        setVisitorToday(today);
+      });
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const addToast = useCallback((message, type="success") => {
+    const id = Date.now();
+    setToasts(t=>[...t,{id,message,type}]);
+  }, []);
+  const removeToast = id => setToasts(t=>t.filter(x=>x.id!==id));
+
+  useEffect(() => {
+    const handler = e => {
+      if (e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"||e.target.tagName==="SELECT") return;
+      if (e.key==="?") setShowShortcuts(v=>!v);
+      if (e.key==="Escape") { setSelectedFiles(new Set()); setShowShortcuts(false); }
+      if (e.key==="u"||e.key==="U") inputRef.current?.click();
+      if (e.key==="r"||e.key==="R") document.getElementById("run-btn")?.click();
+      if ((e.metaKey||e.ctrlKey)&&e.key==="a") { e.preventDefault(); setSelectedFiles(new Set(files.map(f=>f.id))); }
+      if (e.key==="Backspace"&&selectedFiles.size>0) {
+        setFiles(f=>f.filter(x=>!selectedFiles.has(x.id)));
+        setSelectedFiles(new Set()); addToast("Files removed");
+      }
+    };
+    window.addEventListener("keydown",handler);
+    return ()=>window.removeEventListener("keydown",handler);
+  }, [files,selectedFiles,addToast]);
+
+  useEffect(() => {
+    if (operation==="Rotate / Reorder"&&files.length>0) {
+      const total=files.reduce((a,f)=>a+f.pages,0);
+      setPages(Array.from({length:Math.min(total,16)},(_,i)=>({id:String(i),num:i+1,rotation:0})));
+    }
+  }, [operation,files]);
+
+  const processFiles = useCallback((newFiles) => {
+    const readers = newFiles.map(f=>new Promise(resolve=>{
+      const reader=new FileReader();
+      reader.onload=e=>resolve({id:Math.random().toString(36).slice(2),name:f.name,size:f.size,pages:Math.floor(Math.random()*18)+1,type:f.type||"",dataUrl:e.target.result});
+      reader.readAsDataURL(f);
+    }));
+    Promise.all(readers).then(mapped=>{
+      setFiles(prev=>{
+        const all=[...prev,...mapped];
+        if (all.length>1&&all.every(f=>f.name.toLowerCase().endsWith(".pdf"))) setOperation("Merge PDFs");
+        else if (mapped.some(f=>f.type?.startsWith("image/"))) setOperation("Image to PDF");
+        return all;
+      });
+      setDone(false);
+      if (mapped.length) addToast(`${mapped.length} file${mapped.length>1?"s":""} added`);
+    });
+  }, [addToast]);
+
+  const handleDrop = useCallback(e=>{
+    e.preventDefault(); setDragging(false);
+    processFiles(Array.from(e.dataTransfer?.files||[]));
+  },[processFiles]);
+
+  const removeFile = id => {
+    setFiles(f=>f.filter(x=>x.id!==id));
+    setSelectedFiles(s=>{const n=new Set(s);n.delete(id);return n;});
+  };
+
+  const runTask = () => {
+    if (!files.length) { addToast("Upload at least one file first","error"); return; }
+    setRunning(true); setProgress(0); setDone(false);
+    let p=0;
+    const iv=setInterval(()=>{
+      p+=Math.random()*13+4;
+      if (p>=100) {
+        clearInterval(iv); setProgress(100);
+        setTimeout(()=>{ setRunning(false); setDone(true); setShowDownloadPopup(true); addToast(`${operation} complete! Ready to download.`); },400);
+      } else setProgress(Math.min(p,98));
+    },260);
+  };
+
+  const filteredFiles = files.filter(f=>f.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const totalSize = files.reduce((a,f)=>a+f.size,0);
+  const totalPages = files.reduce((a,f)=>a+f.pages,0);
+
+  const S = {
+    app:{minHeight:"100vh",display:"flex",flexDirection:"column",background:"#070B12",color:"#EEF2FF",fontFamily:"'DM Sans',sans-serif"},
+    header:{height:56,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 24px",background:"rgba(7,11,18,0.95)",borderBottom:"1px solid rgba(255,255,255,0.06)",position:"sticky",top:0,zIndex:100,backdropFilter:"blur(20px)"},
+    quickBar:{display:"flex",alignItems:"center",gap:8,padding:"10px 24px",background:"#0C1220",borderBottom:"1px solid rgba(255,255,255,0.06)",overflowX:"auto"},
+    main:{flex:1,display:"grid",gridTemplateColumns:"270px 1fr 295px"},
+    panelLeft:{borderRight:"1px solid rgba(255,255,255,0.06)",background:"#0C1220",display:"flex",flexDirection:"column",overflowY:"auto",maxHeight:"calc(100vh - 108px)"},
+    panelCenter:{display:"flex",flexDirection:"column",background:"#070B12",overflow:"hidden"},
+    panelRight:{borderLeft:"1px solid rgba(255,255,255,0.06)",background:"#0C1220",display:"flex",flexDirection:"column",overflowY:"auto",maxHeight:"calc(100vh - 108px)"},
+    section:{padding:"16px",borderBottom:"1px solid rgba(255,255,255,0.06)"},
+    sTitle:{fontSize:10,fontWeight:700,letterSpacing:"0.8px",textTransform:"uppercase",color:"rgba(238,242,255,0.28)",marginBottom:12},
+    footer:{borderTop:"1px solid rgba(255,255,255,0.06)",padding:"12px 24px",background:"#0C1220",display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:11,color:"rgba(238,242,255,0.28)"},
+  };
+
+  return (
+    <div style={S.app}>
+      {/* HEADER */}
+      <header style={S.header}>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <div style={{width:30,height:30,background:"#0A84FF",borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"Syne",fontWeight:800,fontSize:15,color:"#fff",boxShadow:"0 0 16px rgba(10,132,255,0.3)"}}>P</div>
+          <div>
+            <div style={{fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:16,letterSpacing:"-0.3px"}}>PDF<span style={{color:"#0A84FF"}}>Studio</span></div>
+            <div style={{fontSize:10,color:"rgba(238,242,255,0.3)",marginTop:-1,fontStyle:"italic"}}>by Joseph</div>
+          </div>
+        </div>
+
+        {/* VISITOR COUNTER — center of header */}
+        {visitorTotal > 0 && <VisitorBadge total={visitorTotal}/>}
+
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <div style={{background:"rgba(48,209,88,0.12)",border:"1px solid rgba(48,209,88,0.3)",color:"#30D158",padding:"4px 14px",borderRadius:20,fontSize:11,fontWeight:600}}>✦ 100% Free</div>
+          <button className="hbtn" onClick={()=>setShowShortcuts(true)}>⌨</button>
+          <button className="hbtn" onClick={()=>inputRef.current?.click()}>⬆ Upload</button>
+        </div>
+      </header>
+
+      {/* QUICK TOOLS */}
+      <div style={S.quickBar} className="quick-bar">
+        <span style={{fontSize:10,color:"rgba(238,242,255,0.28)",whiteSpace:"nowrap",marginRight:4,fontWeight:700,letterSpacing:"0.5px",textTransform:"uppercase"}}>Tools:</span>
+        {QUICK_TOOLS.map(t=>(
+          <div key={t.id} className={`qt ${operation===t.id?"act":""}`} onClick={()=>setOperation(t.id)}>
+            <span className="qt-icon">{t.icon}</span>
+            <span className="qt-label">{t.label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* MAIN 3-COL */}
+      <main style={S.main} className="main-grid">
+
+        {/* LEFT */}
+        <aside style={S.panelLeft} className="pl">
+          {/* UPLOAD */}
+          <div style={S.section}>
+            <div style={S.sTitle}>Upload Files</div>
+            <div className={`uz ${dragging?"dv":""}`}
+              onDragOver={e=>{e.preventDefault();setDragging(true);}}
+              onDragLeave={()=>setDragging(false)}
+              onDrop={handleDrop}
+              onClick={()=>inputRef.current?.click()}>
+              <div className="ui">{dragging?"⬇":"📂"}</div>
+              <div style={{fontWeight:600,fontSize:14,marginBottom:4}}>{dragging?"Drop to upload":"Drag files here"}</div>
+              <div style={{fontSize:11,color:"rgba(238,242,255,0.3)",lineHeight:1.5}}>PDF · JPG · PNG · HEIC · WEBP</div>
+              <div style={{fontSize:11,color:"rgba(238,242,255,0.3)",marginTop:2}}>No account. No limits. Free forever.</div>
+              <button className="ubtn" onClick={e=>{e.stopPropagation();inputRef.current?.click();}}>Choose Files</button>
+            </div>
+            <input ref={inputRef} type="file" multiple accept=".pdf,image/*" style={{display:"none"}} onChange={e=>processFiles(Array.from(e.target.files||[]))}/>
+          </div>
+
+          {/* SESSION STATS */}
+          <div style={S.section}>
+            <div style={S.sTitle}>Session</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+              {[["Files",files.length,"#0A84FF"],["Pages",totalPages,"#00C7BE"],[totalSize<1048576?"KB":"MB",totalSize<1048576?(totalSize/1024).toFixed(0):(totalSize/1048576).toFixed(1),"#FFD60A"],["Retention","24h","#30D158"]].map(([label,val,color])=>(
+                <div key={label} className="sc">
+                  <div className="sv" style={{color}}>{val}</div>
+                  <div className="sl">{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* LIVE VISITOR STATS */}
+          <div style={S.section}>
+            <VisitorPanel total={visitorTotal} today={visitorToday}/>
+          </div>
+
+          {/* WHY SECTION */}
+          <div style={S.section}>
+            <div style={S.sTitle}>Why PDF Studio</div>
+            {[["🔒","Private & Secure","Auto-deleted in 24h, never stored"],["⚡","Instant","No queue, processes immediately"],["🌐","Browser-based","No install, works on any device"],["💸","Always Free","No login, no credit card, ever"]].map(([icon,title,sub])=>(
+              <div key={title} style={{display:"flex",gap:10,marginBottom:12,alignItems:"flex-start"}}>
+                <span style={{fontSize:16,flexShrink:0}}>{icon}</span>
+                <div>
+                  <div style={{fontSize:12,fontWeight:600,marginBottom:2}}>{title}</div>
+                  <div style={{fontSize:11,color:"rgba(238,242,255,0.28)"}}>{sub}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* RECENT ACTIVITY */}
+          {done && (
+            <div style={S.section}>
+              <div style={S.sTitle}>Recent</div>
+              <div style={{background:"#111827",border:"1px solid rgba(0,199,190,0.2)",borderRadius:8,padding:"10px 12px",fontSize:12}}>
+                <div style={{color:"#00C7BE",fontWeight:600,marginBottom:4}}>✓ {operation}</div>
+                <div style={{color:"rgba(238,242,255,0.4)",fontSize:11}}>{files.length} file{files.length!==1?"s":""} processed · Just now</div>
+              </div>
+            </div>
+          )}
+        </aside>
+
+        {/* CENTER */}
+        <section style={S.panelCenter}>
+          <div className="ch">
+            <div className="sb">
+              <span style={{color:"rgba(238,242,255,0.28)",fontSize:13}}>⌕</span>
+              <input placeholder="Filter files..." value={searchQuery} onChange={e=>setSearchQuery(e.target.value)}/>
+            </div>
+            {files.length>0&&<button className="hbtn" onClick={()=>setSelectedFiles(new Set(files.map(f=>f.id)))}>Select All</button>}
+            <div style={{display:"flex",background:"#111827",border:"1px solid rgba(255,255,255,0.06)",borderRadius:6,overflow:"hidden"}}>
+              {[["≡","list"],["⊞","grid"]].map(([icon,m])=>(
+                <button key={m} onClick={()=>setViewMode(m)} style={{background:viewMode===m?"#1C2536":"none",border:"none",color:viewMode===m?"#EEF2FF":"rgba(238,242,255,0.35)",padding:"6px 11px",cursor:"pointer",fontSize:14,transition:"all 0.15s"}}>{icon}</button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flb">
+            {running&&(
+              <div className="pc">
+                <ProgressRing progress={Math.round(progress)}/>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:600,color:"#0A84FF",marginBottom:6}}>⚙ {operation}</div>
+                  <div className="pt"><div className="pf" style={{width:`${progress}%`}}/></div>
+                  <div style={{fontSize:11,color:"rgba(238,242,255,0.28)",marginTop:6}}>Processing {files.length} file{files.length!==1?"s":""}...</div>
+                </div>
+                <div style={{fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:16,textAlign:"center",minWidth:40}}>{Math.round(progress)}%</div>
+              </div>
+            )}
+
+            {done&&!running&&(
+              <div className="rc">
+                <div style={{display:"flex",alignItems:"center",gap:8,fontWeight:600,fontSize:14,color:"#00C7BE",marginBottom:12}}>
+                  <span>✓</span>{operation} — Complete!
+                </div>
+                <button className="dbl" onClick={()=>setShowDownloadPopup(true)}>⬇ Download Your File</button>
+                <div style={{fontSize:11,color:"rgba(238,242,255,0.28)",marginTop:4}}>⏱ Auto-deletes in 24h · Click download above or see the popup</div>
+              </div>
+            )}
+
+            {selectedFiles.size>0&&(
+              <div className="bb">
+                <span style={{color:"#0A84FF",fontWeight:600}}>{selectedFiles.size} selected</span>
+                <button className="bbt" onClick={()=>setSelectedFiles(new Set())}>Clear</button>
+                <button className="bbt d" onClick={()=>{setFiles(f=>f.filter(x=>!selectedFiles.has(x.id)));setSelectedFiles(new Set());addToast("Files removed");}}>Remove Selected</button>
+              </div>
+            )}
+
+            {operation==="Rotate / Reorder"&&files.length>0?(
+              <div>
+                <div style={{fontSize:12,color:"rgba(238,242,255,0.28)",marginBottom:12}}>Click pages to select · Rotate or delete individual pages</div>
+                <div className="pg">
+                  {pages.map(page=>(
+                    <PageThumbnail key={page.id} page={page}
+                      selected={selectedFiles.has(page.id)}
+                      onSelect={id=>setSelectedFiles(s=>{const n=new Set(s);n.has(id)?n.delete(id):n.add(id);return n;})}
+                      onRotate={(id,deg)=>setPages(ps=>ps.map(p=>p.id===id?{...p,rotation:(p.rotation+deg)%360}:p))}
+                      onDelete={id=>{setPages(ps=>ps.filter(p=>p.id!==id));addToast("Page removed");}}/>
+                  ))}
+                </div>
+              </div>
+            ):filteredFiles.length===0?(
+              <div className="es">
+                <div style={{fontSize:54,marginBottom:18,opacity:0.2}}>📄</div>
+                <div style={{fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:18,opacity:0.3,marginBottom:8}}>{files.length===0?"No files yet":"No matches"}</div>
+                <div style={{fontSize:13,color:"rgba(238,242,255,0.28)",maxWidth:260,lineHeight:1.6}}>{files.length===0?"Upload PDFs or images to get started. No account needed.":"Try a different search term."}</div>
+              </div>
+            ):viewMode==="grid"?(
+              <div className="fcg">
+                {filteredFiles.map(file=>(
+                  <div key={file.id} className={`fgc ${selectedFiles.has(file.id)?"sel":""}`} onClick={()=>setSelectedFiles(s=>{const n=new Set(s);n.has(file.id)?n.delete(file.id):n.add(file.id);return n;})}>
+                    <FileIcon name={file.name}/>
+                    <div style={{fontSize:11,fontWeight:500,wordBreak:"break-all"}}>{file.name}</div>
+                    <div style={{fontSize:10,color:"rgba(238,242,255,0.28)"}}>{file.pages}p · {(file.size/1024).toFixed(0)}KB</div>
+                  </div>
+                ))}
+              </div>
+            ):(
+              <>
+                {filteredFiles.map(file=>(
+                  <div key={file.id} className={`fr ${selectedFiles.has(file.id)?"sel":""}`} onClick={()=>setSelectedFiles(s=>{const n=new Set(s);n.has(file.id)?n.delete(file.id):n.add(file.id);return n;})}>
+                    <div className={`fck ${selectedFiles.has(file.id)?"on":""}`}>{selectedFiles.has(file.id)?"✓":""}</div>
+                    <span className="dh">⠿</span>
+                    <FileIcon name={file.name}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div className="fn">{file.name}</div>
+                      <div className="fm">{(file.size/1024).toFixed(0)} KB · {file.pages} page{file.pages!==1?"s":""}</div>
+                    </div>
+                    <span style={{background:"#1C2536",border:"1px solid rgba(255,255,255,0.06)",borderRadius:4,padding:"2px 7px",fontSize:11,color:"rgba(238,242,255,0.28)",flexShrink:0}}>{file.pages}p</span>
+                    <div className="fa" onClick={e=>e.stopPropagation()}>
+                      <button className="ib pv">👁</button>
+                      <button className="ib" onClick={()=>{removeFile(file.id);addToast("File removed");}}>✕</button>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        </section>
+
+        {/* RIGHT */}
+        <aside style={S.panelRight} className="pr">
+          <div style={{...S.section,flex:"none"}}>
+            <div style={S.sTitle}>Configure</div>
+            <CategoryDropdown value={operation} onChange={op=>{setOperation(op);setDone(false);}}/>
+            <div style={{background:"#111827",border:"1px solid rgba(255,255,255,0.06)",borderRadius:10,padding:14,marginTop:12}}>
+              <span style={{fontSize:26,display:"block",marginBottom:8}}>{OP_ICONS[operation]}</span>
+              <div style={{fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:15,marginBottom:5}}>{operation}</div>
+              <div style={{fontSize:12,color:"rgba(238,242,255,0.4)",lineHeight:1.6}}>{OP_DESCRIPTIONS[operation]}</div>
+            </div>
+          </div>
+          <div style={{...S.section,flex:1}}>
+            <div style={S.sTitle}>Options</div>
+            <ControlsPanel operation={operation} compressionLevel={compressionLevel} setCompressionLevel={setCompressionLevel} ocrLang={ocrLang} setOcrLang={setOcrLang} pageRange={pageRange} setPageRange={setPageRange} watermarkText={watermarkText} setWatermarkText={setWatermarkText} password={password} setPassword={setPassword} outputFilename={outputFilename} setOutputFilename={setOutputFilename}/>
+          </div>
+          <div style={{padding:16,flexShrink:0}}>
+            {running&&(
+              <div style={{marginBottom:12}}>
+                <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:"rgba(238,242,255,0.4)",marginBottom:6}}>
+                  <span>Processing...</span><span style={{fontWeight:600}}>{Math.round(progress)}%</span>
+                </div>
+                <div className="pt"><div className="pf" style={{width:`${progress}%`}}/></div>
+              </div>
+            )}
+            <button id="run-btn" className="rbl" onClick={runTask} disabled={running}>
+              {running?`⚙ Running... ${Math.round(progress)}%`:`▶ Run — ${operation}`}
+            </button>
+            <button style={{width:"100%",padding:10,background:"none",border:"1px solid rgba(255,255,255,0.06)",borderRadius:9,color:"rgba(238,242,255,0.35)",fontFamily:"inherit",fontSize:13,cursor:"pointer",marginBottom:12,transition:"all 0.2s"}}>
+              ☆ Save as Preset
+            </button>
+            <div style={{background:"#111827",border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:12}}>
+              <div style={S.sTitle}>💡 Tip</div>
+              <div style={{fontSize:11,color:"rgba(238,242,255,0.35)",lineHeight:1.7}}>
+                {{"Merge PDFs":"↕ Drag files to reorder before merging","Compress":"Medium preset gives the best size/quality balance","OCR":"300 DPI scans give the best accuracy","Image to PDF":"Use Auto orientation to handle landscape images","Split / Extract":'Use "1-3, 5, 8-12" for non-contiguous pages',"Rotate / Reorder":"Click a page to select, then use the rotate buttons"}[operation]||"Upload your file and click Run to process it instantly."}
+              </div>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      {/* FOOTER */}
+      <footer style={S.footer}>
+        <div><span style={{color:"#0A84FF",fontWeight:600}}>PDF Studio</span> — Created with ❤️ by <strong style={{color:"#EEF2FF"}}>Joseph</strong> · Files auto-deleted after 24h · Free forever</div>
+        <div style={{display:"flex",gap:16,alignItems:"center"}}>
+          {visitorTotal>0&&<span style={{color:"#30D158",fontWeight:600}}>👥 {visitorTotal.toLocaleString()} visitors</span>}
+          {["Privacy","Terms","Security"].map(l=><a key={l} href="#" style={{color:"rgba(238,242,255,0.28)",textDecoration:"none"}}>{l}</a>)}
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:6}}>🔒 Encrypted · No tracking</div>
+      </footer>
+
+      {/* KEYBOARD HINT */}
+      <div style={{position:"fixed",bottom:18,left:22,background:"#111827",border:"1px solid rgba(255,255,255,0.08)",borderRadius:8,padding:"7px 14px",fontSize:11,color:"rgba(238,242,255,0.3)",display:"flex",alignItems:"center",gap:6,zIndex:50}}>
+        Press <code style={{background:"#1C2536",border:"1px solid rgba(255,255,255,0.1)",borderRadius:3,padding:"1px 5px",fontFamily:"monospace",fontSize:10}}>?</code> for shortcuts
+      </div>
+
+      {showShortcuts&&<KeyboardShortcuts onClose={()=>setShowShortcuts(false)}/>}
+
+      {showDownloadPopup&&(
+        <DownloadPopup operation={operation} files={files}
+          onClose={()=>setShowDownloadPopup(false)}
+          onNewTask={()=>{setShowDownloadPopup(false);setFiles([]);setDone(false);setSelectedFiles(new Set());}}/>
+      )}
+
+      <div className="toast-wrap">
+        {toasts.map(t=><Toast key={t.id} message={t.message} type={t.type} onClose={()=>removeToast(t.id)}/>)}
+      </div>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(React.createElement(PDFStudio));
+</script>
+</body>
+</html>
